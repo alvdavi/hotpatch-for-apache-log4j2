@@ -1,0 +1,8 @@
+grant codeBase "file:./*" {
+        permission java.security.AllPermission;
+};
+
+grant {
+  // this is required due to the way Apollo symlinks everything
+  permission java.io.FilePermission "<<ALL FILES>>", "read";
+};
