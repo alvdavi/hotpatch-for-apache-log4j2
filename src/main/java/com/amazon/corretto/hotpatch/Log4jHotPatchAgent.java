@@ -28,17 +28,6 @@ import static com.amazon.corretto.hotpatch.Util.log;
 //@SuppressWarnings({"JavaReflectionMemberAccess", "PointlessBitwiseExpression", "CatchMayIgnoreException"})
 public class Log4jHotPatchAgent {
   private static boolean agentLoaded = false;
-
-  static {
-    // set the version of this agent
-    try {
-      System.setProperty(Constants.LOG4J_FIXER_AGENT_VERSION, String.valueOf(Constants.log4jFixerAgentVersion));
-    } catch (Exception e) {
-      log("Warning: Could not record agent version in system property: " + e.getMessage());
-      log("Warning: This will make it more difficult to test if agent is already loaded, but will not prevent patching");
-    }
-  }
-
   private static boolean staticAgent = false; // Set to true if loaded as a static agent from 'premain()'
 
   private static List<HotPatch> loadPatches(String args) {
@@ -111,6 +100,14 @@ public class Log4jHotPatchAgent {
     // for class instances which might get loaded in the future.
     inst.addTransformer(transformer, false);
     agentLoaded = true;
+    // set the version of this agent in a system property so that
+    // subsequent clients can read it and skip re-patching.
+    try {
+      System.setProperty(Constants.LOG4J_FIXER_AGENT_VERSION, String.valueOf(Constants.log4jFixerAgentVersion));
+    } catch (Exception e) {
+      log("Warning: Could not record agent version in system property: " + e.getMessage());
+      log("Warning: This will make it more difficult to test if agent is already loaded, but will not prevent patching");
+    }
   }
 
   public static void premain(String args, Instrumentation inst) {
