@@ -27,11 +27,16 @@ import static com.amazon.corretto.hotpatch.Util.log;
 
 //@SuppressWarnings({"JavaReflectionMemberAccess", "PointlessBitwiseExpression", "CatchMayIgnoreException"})
 public class Log4jHotPatchAgent {
-
+  private static boolean agentLoaded = false;
 
   static {
     // set the version of this agent
-    System.setProperty(Constants.LOG4J_FIXER_AGENT_VERSION, String.valueOf(Constants.log4jFixerAgentVersion));
+    try {
+      System.setProperty(Constants.LOG4J_FIXER_AGENT_VERSION, String.valueOf(Constants.log4jFixerAgentVersion));
+    } catch (Exception e) {
+      log("Warning: Could not record agent version in system property: " + e.getMessage());
+      log("Warning: This will make it more difficult to test if agent is already loaded, but will not prevent patching");
+    }
   }
 
   private static boolean staticAgent = false; // Set to true if loaded as a static agent from 'premain()'
@@ -46,6 +51,10 @@ public class Log4jHotPatchAgent {
   }
 
   public static void agentmain(String args, Instrumentation inst) {
+    if (agentLoaded) {
+      log("Info: hot patch agent already loaded");
+      return;
+    }
     int asm = asmVersion();
     log("Loading Java Agent version " + Constants.log4jFixerAgentVersion + " (using ASM" + (asm >> 16) + ").");
 
@@ -101,6 +110,7 @@ public class Log4jHotPatchAgent {
     // Re-add the transformer with 'canRetransform' set to false
     // for class instances which might get loaded in the future.
     inst.addTransformer(transformer, false);
+    agentLoaded = true;
   }
 
   public static void premain(String args, Instrumentation inst) {

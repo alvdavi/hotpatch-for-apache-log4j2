@@ -5,7 +5,12 @@ import org.objectweb.asm.Opcodes;
 public final class Util {
     // property name for verbose flag
     public static final String LOG4J_FIXER_VERBOSE = "log4jFixerVerbose";
-    private static boolean verbose = Boolean.parseBoolean(System.getProperty(LOG4J_FIXER_VERBOSE, "true"));
+    private static boolean verbose = true;
+    static {
+        try {
+            verbose = Boolean.parseBoolean(System.getProperty(LOG4J_FIXER_VERBOSE, "true"));
+        } catch (Exception e) { }
+    }
 
     public static int asmVersion() {
         try {
