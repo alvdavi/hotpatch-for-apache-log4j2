@@ -1,51 +1,41 @@
-# com.amazon.corretto.hotpatch.Log4jHotPatchAgent
+# Log4jHotPatchAgent
 
-This is a tool which injects a Java agent into a running JVM process. The agent will attempt to patch the `lookup()` method of all loaded `org.apache.logging.log4j.core.lookup.JndiLookup` instances to unconditionally return the string "Patched JndiLookup::lookup()". It is designed to address the [CVE-2021-44228](https://www.randori.com/blog/cve-2021-44228/) remote code execution vulnerability in Log4j without restarting the Java process.
+This is a simple tool which injects a Java agent into a running JVM process. The agent will patch the `lookup()` method of all loaded `org.apache.logging.log4j.core.lookup.JndiLookup` instances to unconditionally return the string "Patched JndiLookup::lookup()". This should fix the [CVE-2021-44228](https://www.randori.com/blog/cve-2021-44228/) remote code execution vulnerability in Log4j without restarting the Java process.
 
-The dynamic and static agents are known to run on JDK 8 & 11 on Linux whereas on JDK 17 only the static agent is working (see below).
+This has been currently only tested with JDK 8, 11, 15 and 17 on Linux!
 
 ## Building
-
-JDK 8
+To build on linux, mac and Windows subsystem for linux
 ```
-javac -XDignore.symbol.file=true -cp <java-home>/lib/tools.jar com.amazon.corretto.hotpatch.Log4jHotPatchAgent.java
+./gradlew build
 ```
-
-JDK 11+
+To build on Windows
 ```
-javac --add-exports java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED com.amazon.corretto.hotpatch.Log4jHotPatchAgent.java
+.\gradlew.bat build
 ```
-
-### Building a static agent
-
-After compiling as described above, build the agent jar file as follows:
-```
-jar -cfm com.amazon.corretto.hotpatch.Log4jHotPatchAgent.jar Manifest.mf *.class
-```
+Depending on the platform you are building. This will generate `build/libs/Log4jHotPatch.jar`
 
 ## Running
 
 JDK 8
 ```
-java -cp .:<java-home>/lib/tools.jar com.amazon.corretto.hotpatch.Log4jHotPatchAgent <java-pid>
+java -cp <java-home>/lib/tools.jar:Log4jHotPatch.jar <java-pid>
 ```
 
-JDK 11
+JDK 11 and newer
 ```
-java com.amazon.corretto.hotpatch.Log4jHotPatchAgent <java-pid>
+java -jar Log4jHotPatch.jar <java-pid>
 ```
 
 ### Running the static agent
 
 Simply add the agent to your java command line as follows:
 ```
-java -classpath <class-path> -javaagent:com.amazon.corretto.hotpatch.Log4jHotPatchAgent.jar <main-class> <arguments>
+java -classpath <class-path> -javaagent:Log4jHotPatchAgent.jar <main-class> <arguments>
 ```
 
-To make this tool as simple and self-contained as possible, it uses OpenJDK's internal copy of the [ObjectWeb ASM](https://asm.ow2.io/) library in the target JVM. In JDK 17 the strong encapsulation of this library can only be bypassed with a command line option. This is why the reason why applications running on JDK 17 can currently only be patched with the static version of the agent:
-```
-java --add-exports=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED -classpath <class-path> -javaagent:com.amazon.corretto.hotpatch.Log4jHotPatchAgent.jar <main-class> <arguments>
-```
+### Testing the agent
+There are a set of tests that can be run outside gradle.
 
 ## Known issues
 
@@ -70,5 +60,27 @@ com.sun.tools.attach.AttachNotSupportedException: Unable to open socket file: ta
 	at com.amazon.corretto.hotpatch.Log4jHotPatchAgent.main(com.amazon.corretto.hotpatch.Log4jHotPatchAgent.java:259)
 ```
 this means you're running as a different user (including root) than the target JVM. JDK 8 can't handle patching as root user (and triggers a thread dump in the target JVM which is harmless). In JDK 11 patching a non-root process from a root process works just fine. 
+
+If you get an error like this in the target process:
+```
+Exception in thread "Attach Listener" java.lang.ExceptionInInitializerError
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:498)
+        at sun.instrument.InstrumentationImpl.loadClassAndStartAgent(InstrumentationImpl.java:386)
+        at sun.instrument.InstrumentationImpl.loadClassAndCallAgentmain(InstrumentationImpl.java:411)
+Caused by: java.security.AccessControlException: access denied ("java.util.PropertyPermission" "log4jFixerAgentVersion" "write")
+        at java.security.AccessControlContext.checkPermission(AccessControlContext.java:472)
+        at java.security.AccessController.checkPermission(AccessController.java:886)
+        at java.lang.SecurityManager.checkPermission(SecurityManager.java:549)
+        at java.lang.System.setProperty(System.java:794)
+        at Log4jHotPatch.<clinit>(Log4jHotPatch.java:66)
+```
+it means the target process has a security manager installed. Look for this command line option in the target process:
+```
+-Djava.security.policy=/local/apollo/.../apollo-security.policy
+```
+If you encounter this error, make sure you are using the latest version of the tool
 
 **Important:** If you attempted to patch as the wrong user, you may need to delete `.attach_pid<pid>` files (found in `/tmp` and/or the CWD of the VM process) before trying again. These files need to have the right ownership for attach to succeed.
