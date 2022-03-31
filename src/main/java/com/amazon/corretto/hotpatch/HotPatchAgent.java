@@ -52,8 +52,8 @@ import static com.amazon.corretto.hotpatch.Constants.*;
  * the agent) are passed as parameters to the agent. If the agent is not able to locate or load the jar using its
  * custom classloader, the SystemClassloader will be used, mirroring the behavior of previous versions of the tool. If
  * the patcher to be loaded cannot be determined, the default patcher
- * {@link com.amazon.corretto.hotpatch.patch.impl.set.Log4j2PatchSetV1} will be applied, which applies the same
- * class transformation as older versions of this tool.
+ * {@link com.amazon.corretto.hotpatch.patch.impl.set.Log4j2PatchSet.Log4j2PatchSetV1} will be applied, which applies
+ * the same class transformation as older versions of this tool.
  */
 public class HotPatchAgent {
   // version of this agent, it will be stored in a property named {@link Constants#LOG4J_FIXER_AGENT_VERSION}
@@ -135,7 +135,7 @@ public class HotPatchAgent {
       URL patcherJar = getPatcherJar(processedArgs);
       newPatcher = loadPatcher(patcherName, patcherJar);
     } catch (Exception e) {
-      logger.log(Logger.ERROR, "Can't load new Patcher " + patcherName);
+      logger.log(Logger.ERROR, "Can't load new Patcher " + patcherName, e);
       return;
     }
 

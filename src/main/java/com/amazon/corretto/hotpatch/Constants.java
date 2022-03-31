@@ -32,5 +32,5 @@ public class Constants {
     public static final String PATCHER_JAR_ARG = "patcherJar";
 
     // Class name of the default patcher.
-    public static final String DEFAULT_PATCHER = "com.amazon.corretto.hotpatch.patch.impl.set.Log4j2PatchSetV1";
+    public static final String DEFAULT_PATCHER = "com.amazon.corretto.hotpatch.patch.impl.set.Log4j2PatchSet$Log4j2PatchSetV1";
 }
