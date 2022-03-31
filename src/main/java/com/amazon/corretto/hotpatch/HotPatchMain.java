@@ -26,6 +26,7 @@ import java.util.Set;
 
 import com.amazon.corretto.hotpatch.interfaces.Patcher;
 import com.amazon.corretto.hotpatch.patch.impl.set.Log4j2PatchSet;
+import com.amazon.corretto.hotpatch.patch.impl.set.SpringPatcher;
 import com.sun.tools.attach.VirtualMachine;
 import sun.jvmstat.monitor.MonitoredHost;
 import sun.jvmstat.monitor.MonitoredVm;
@@ -51,6 +52,8 @@ public class HotPatchMain {
     static {
         KNOWN_PATCHERS.add(new Log4j2PatchSet.Log4j2PatchSetV0());
         KNOWN_PATCHERS.add(new Log4j2PatchSet.Log4j2PatchSetV1());
+        KNOWN_PATCHERS.add(new SpringPatcher.SpringPatchSetV0());
+        KNOWN_PATCHERS.add(new SpringPatcher.SpringPatchSetV1());
     }
 
     private static final String DEFAULT_PATCHER = Log4j2PatchSet.Log4j2PatchSetV1.class.getName();
