@@ -11,7 +11,7 @@ repositories {
 }
 
 jar {
-    archiveFileName.set('Log4jHotPatch.jar')
+    archiveFileName.set('CorrettoHotpatcher.jar')
     manifest.from('src/main/resources/MANIFEST.MF')
     manifest.attributes(
                 'Implementation-Version': archiveVersion.get(),
@@ -33,7 +33,7 @@ dependencies {
 
 task runShellTests(type: Exec) {
     dependsOn jar
-    commandLine 'sh', "${rootProject.projectDir}/build-tools/bin/run_tests.sh", jar.archiveFile.get(), Jvm.current().getJavaHome().toString(), '--summary'
+    commandLine 'sh', "${rootProject.projectDir}/build-tools/bin/run_tests.sh", jar.archiveFile.get(), Jvm.current().getJavaHome().toString(), "--summary"
 }
 
 test.dependsOn runShellTests

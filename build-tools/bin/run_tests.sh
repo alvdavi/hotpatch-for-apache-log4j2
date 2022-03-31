@@ -50,12 +50,12 @@ function static_agent_configure_verbose() {
   if [ "$3" = "unset" ]; then
     PROP_VALUE=""
   else
-    PROP_VALUE="-Dlog4jFixerVerbose=$3"
+    PROP_VALUE="-Dcorretto.hotpatch.loggerVerbose=$3"
   fi
   if [ "$4" = "unset" ]; then
     ARG_VALUE=""
   else
-    ARG_VALUE="=log4jFixerVerbose=$4"
+    ARG_VALUE="=corretto.hotpatch.loggerVerbose=$4"
   fi
 
   local jdk_dir=$1

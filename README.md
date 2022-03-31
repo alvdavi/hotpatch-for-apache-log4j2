@@ -1,4 +1,4 @@
-# Log4jHotPatch
+# CorrettoHotpatcher
 
 This is a tool which injects a Java agent into a running JVM process. The agent will attempt to patch the `lookup()` method of all loaded `org.apache.logging.log4j.core.lookup.JndiLookup` instances to unconditionally return the string "Patched JndiLookup::lookup()". It is designed to address the [CVE-2021-44228](https://nvd.nist.gov/vuln/detail/CVE-2021-44228/) remote code execution vulnerability in Log4j without restarting the Java process. This tool will also address [CVE-2021-45046](https://nvd.nist.gov/vuln/detail/CVE-2021-45046/).
 
@@ -16,7 +16,7 @@ To build on Windows
 .\gradlew.bat build
 ```
 
-Depending on the platform you are building. This will generate `build/libs/Log4jHotPatch.jar`
+Depending on the platform you are building. This will generate `build/libs/CorrettoHotpatcher.jar`
 
 ### Maven
 
@@ -26,31 +26,31 @@ To build using Maven use
 mvn clean package
 ```
 
-This will generate a `target/Log4jHotPatch.jar`.
+This will generate a `target/CorrettoHotpatcher.jar`.
 
 ## Running
 
 JDK 8
 ```
-java -cp <java-home>/lib/tools.jar:Log4jHotPatch.jar Log4jHotPatch <java-pid>
+java -cp <java-home>/lib/tools.jar:CorrettoHotpatcher.jar CorrettoHotpatcher <java-pid>
 ```
 
 JDK 11 and newer
 ```
-java -jar Log4jHotPatch.jar <java-pid>
+java -jar CorrettoHotpatcher.jar <java-pid>
 ```
 
 ### Running the static agent
 
 Simply add the agent to your java command line as follows:
 ```
-java -classpath <class-path> -javaagent:Log4jHotPatch.jar <main-class> <arguments>
+java -classpath <class-path> -javaagent:CorrettoHotpatcher.jar <main-class> <arguments>
 ```
 
 ### Testing the agent
 There are a set of tests that can be run outside Gradle or Maven.
 ```
-build-tools/bin/run_tests.sh Log4jHotPatch.jar <JDK_ROOT>
+build-tools/bin/run_tests.sh CorrettoHotpatcher.jar <JDK_ROOT>
 ```
 
 ## Known issues

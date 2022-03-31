@@ -26,7 +26,7 @@ import com.amazon.corretto.hotpatch.interfaces.Logger;
  * in verbose mode.
  */
 public class LoggerImpl implements com.amazon.corretto.hotpatch.interfaces.Logger {
-    public static final String VERBOSE_PROPERTY_NAME = "log4jFixerVerbose";
+    public static final String VERBOSE_PROPERTY_NAME = Constants.HOTPATCHER_PREFIX + "loggerVerbose";
     private static final Map<Integer, String> LEVELS_TO_STRING = new HashMap<>();
     static {
         LEVELS_TO_STRING.put(Logger.TRACE, "Trace");

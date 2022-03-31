@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Implementation-Title: Log4jHotPatch
+Implementation-Title: CorrettoHotpatcher
 Implementation-Vendor: Amazon Corretto Team
 Main-Class: com.amazon.corretto.hotpatch.HotPatchMain
 Agent-Class: com.amazon.corretto.hotpatch.HotPatchAgent

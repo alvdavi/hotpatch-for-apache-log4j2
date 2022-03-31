@@ -45,7 +45,7 @@ import static com.amazon.corretto.hotpatch.Constants.*;
  *
  * Copies of this class need to be backwards compatible when connecting to VMs running older versions of it, but older
  * versions of the class may not be able to function properly if a newer version is already attached. To prevent
- * compatibility problems a SystemProperty {@link Constants#LOG4J_FIXER_AGENT_VERSION} is set with the version of this
+ * compatibility problems a SystemProperty {@link Constants#HOTPATCHER_VERSION} is set with the version of this
  * agent. That property can be checked before installing the agent in an existing VM.
  *
  * What patcher to install and the location of the jar where the patcher is present (often bundled in the same one as
@@ -304,7 +304,7 @@ public class HotPatchAgent {
   private static void setAgentVersionProperty() {
     // set the version of this agent in a system property to prevent agents with an older version to attach.
     try {
-      System.setProperty(Constants.LOG4J_FIXER_AGENT_VERSION, String.valueOf(HOTPATCH_AGENT_VERSION));
+      System.setProperty(Constants.HOTPATCHER_VERSION, String.valueOf(HOTPATCH_AGENT_VERSION));
     } catch (AccessControlException ece) {
       logger.log(Logger.WARN, "Could not record agent version in system property: " + ece.getMessage());
       logger.log(Logger.WARN, "This will make it more difficult to test if agent is already loaded, " +
@@ -322,9 +322,9 @@ public class HotPatchAgent {
   private static void setPatcherVersionProperty(String name, String version) {
     try {
       if (version == null) {
-        System.clearProperty(HOTPATCH_PATCHER_PREFIX + name);
+        System.clearProperty(HOTPATCHER_PREFIX + name);
       } else {
-        System.setProperty(HOTPATCH_PATCHER_PREFIX + name, version);
+        System.setProperty(HOTPATCHER_PREFIX + name, version);
       }
     } catch (AccessControlException ece) {
       logger.log(Logger.WARN, "Could not record the patcher version in a system property: " + ece.getMessage());

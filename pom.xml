@@ -19,11 +19,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.amazon.corretto.hotpatch</groupId>
-    <artifactId>hotpatch-for-apache-log4j2</artifactId>
+    <artifactId>corretto-hotpatcher</artifactId>
     <version>1.4.0</version>
     <packaging>jar</packaging>
-    <name>Hotpatch for Apache Log4j2</name>
-    <description>A hotpatch to address CVE-2021-44228.</description>
+    <name>Amazon Corretto hotpatcher tool</name>
+    <description>A tool to apply hotpatches to running VMs</description>
 
     <url>https://aws.amazon.com/corretto</url>
     <licenses>
@@ -104,7 +104,7 @@
 
 
     <build>
-        <finalName>Log4jHotPatch</finalName>
+        <finalName>CorrettoHotpatcher</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

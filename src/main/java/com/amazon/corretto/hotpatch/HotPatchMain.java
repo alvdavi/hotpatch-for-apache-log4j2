@@ -44,6 +44,7 @@ public class HotPatchMain {
         // Add legacy entry points
         ENTRY_POINTS.add("Log4jHotPatch");
         ENTRY_POINTS.add("Log4jHotPatch17");
+        ENTRY_POINTS.add("CorrettoHotpatcher");
     }
 
     private static final List<Patcher> KNOWN_PATCHERS = new ArrayList<>();
@@ -184,7 +185,7 @@ public class HotPatchMain {
     }
 
     private static void printHelp() {
-        logger.log("usage: Log4jHotPatch [<operation>] [<parameters>] [<pid> [<pid> ..]]");
+        logger.log("usage: CorrettoHotpatcher [<operation>] [<parameters>] [<pid> [<pid> ..]]");
         logger.log("Operations:");
         logger.log("  install [<patcher>] [<parameters>] [<pid> [<pid> ..]]   - installs a patcher into the target VM");
         //logger.log("  uninstall [<patcher>] [<parameters>] [<pid> [<pid> ..]] - uninstalls a patcher from the target VM");
@@ -261,7 +262,7 @@ public class HotPatchMain {
                     // just rerun 'agentmain()' from the already loaded agent version.
                     Properties props = vm.getSystemProperties();
                     if (props == null) {
-                        logger.log("Error: could not verify 'log4jFixerAgentVersion' in JVM process " + pid);
+                        logger.log("Error: could not verify '" + HOTPATCHER_VERSION + "' in JVM process " + pid);
                         continue;
                     }
 
@@ -269,7 +270,7 @@ public class HotPatchMain {
                     // version of the agent that might have unknown code in the 'agentmain()'. If a newer agent is
                     // deployed, that jar should be used to attach again and apply any other patches.
                     if (!skipAgentVersionCheck) {
-                        String oldVersionString = props.getProperty(LOG4J_FIXER_AGENT_VERSION);
+                        String oldVersionString = props.getProperty(HOTPATCHER_VERSION);
                         if (oldVersionString != null) {
                             long oldVersion = Long.decode(oldVersionString);
                             long newVersion = HotPatchAgent.HOTPATCH_AGENT_VERSION;
@@ -287,7 +288,7 @@ public class HotPatchMain {
                     // transformations.
                     if (!skipPatcherVersionCheck) {
                         patcher = (Patcher)Class.forName(patcherClass).getDeclaredConstructor().newInstance();
-                        String oldVersionString = props.getProperty(HOTPATCH_PATCHER_PREFIX + patcher.getName());
+                        String oldVersionString = props.getProperty(HOTPATCHER_PREFIX + patcher.getName());
                         if (oldVersionString != null) {
                             long oldVersion = Long.decode(oldVersionString);
                             long newVersion = patcher.getVersion();

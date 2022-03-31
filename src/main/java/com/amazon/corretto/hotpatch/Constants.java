@@ -16,11 +16,11 @@
 package com.amazon.corretto.hotpatch;
 
 public class Constants {
-    // property name for the agent version. Name is kept for legacy reasons.
-    public static final String LOG4J_FIXER_AGENT_VERSION = "log4jFixerAgentVersion";
+    // property name for the agent version.
+    public static final String HOTPATCHER_VERSION = "CorrettoHotpatcherVersion";
 
     // This prefix is used to save properties with the specific version of a patcher that was installed in the vm.
-    public static final String HOTPATCH_PATCHER_PREFIX = "corretto.hotpatch.";
+    public static final String HOTPATCHER_PREFIX = "corretto.hotpatch.";
 
     // Agent argument to represent the operation we want to do.
     public static final String OPERATION_ARG = "operation";
