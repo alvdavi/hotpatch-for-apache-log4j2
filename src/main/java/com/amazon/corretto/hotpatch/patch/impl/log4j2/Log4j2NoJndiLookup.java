@@ -15,6 +15,7 @@
 
 package com.amazon.corretto.hotpatch.patch.impl.log4j2;
 
+import com.amazon.corretto.hotpatch.interfaces.Logger;
 import com.amazon.corretto.hotpatch.org.objectweb.asm.ClassReader;
 import com.amazon.corretto.hotpatch.org.objectweb.asm.ClassVisitor;
 import com.amazon.corretto.hotpatch.org.objectweb.asm.ClassWriter;
@@ -37,6 +38,8 @@ public class Log4j2NoJndiLookup implements ClassTransformerHotPatch {
 
     private final static String NAME = "Log4j2_NoJndiLookup";
 
+    private Logger logger;
+
     @Override
     public String getName() {
         return NAME;
@@ -53,7 +56,8 @@ public class Log4j2NoJndiLookup implements ClassTransformerHotPatch {
     }
 
     @Override
-    public byte[] apply(int asmApiVersion, String className, byte[] classfileBuffer) {
+    public byte[] apply(int asmApiVersion, String className, byte[] classfileBuffer, Logger logger) {
+        this.logger = logger;
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         ClassVisitor cv = new NoJndiLookupClassVisitor(asmApiVersion, cw);
         ClassReader cr = new ClassReader(classfileBuffer);

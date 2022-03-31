@@ -143,7 +143,7 @@ public abstract class PatchSetPatcher implements Patcher {
                     if (patch.isTargetClass(className)) {
                         logger.log("Transforming + " + className + " (" + loader + ") with patch "
                                 + patch.getName());
-                        return patch.apply(asmApiVersion, className, classfileBuffer);
+                        return patch.apply(asmApiVersion, className, classfileBuffer, logger);
                     }
                 }
             }

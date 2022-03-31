@@ -15,6 +15,8 @@
 
 package com.amazon.corretto.hotpatch.patch;
 
+import com.amazon.corretto.hotpatch.interfaces.Logger;
+
 /**
  * A ClassTransformerHotPatch represents a transformation to one or more classes. Each instance should fix one and only
  * one problem. Multiple instances of this interface can be bundled together in a
@@ -50,5 +52,5 @@ public interface ClassTransformerHotPatch {
      * @param classfileBuffer the JVMS ClassFile structure of the class to be patched
      * @return the binary content of the patched JVMS ClassFile structure
      */
-    byte[] apply(int asmApiVersion, String className, byte[] classfileBuffer);
+    byte[] apply(int asmApiVersion, String className, byte[] classfileBuffer, Logger logger);
 }
