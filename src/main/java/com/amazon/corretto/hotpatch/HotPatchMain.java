@@ -54,6 +54,7 @@ public class HotPatchMain {
         KNOWN_PATCHERS.add(new Log4j2PatchSet.Log4j2PatchSetV1());
         KNOWN_PATCHERS.add(new SpringPatcher.SpringPatchSetV0());
         KNOWN_PATCHERS.add(new SpringPatcher.SpringPatchSetV1());
+        KNOWN_PATCHERS.add(new SpringPatcher.SpringPatchSetV2());
     }
 
     private static final String DEFAULT_PATCHER = Log4j2PatchSet.Log4j2PatchSetV1.class.getName();

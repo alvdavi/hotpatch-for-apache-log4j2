@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.amazon.corretto.hotpatch.patch.ClassTransformerHotPatch;
 import com.amazon.corretto.hotpatch.patch.impl.spring.Spring_2022_22965_1;
+import com.amazon.corretto.hotpatch.patch.impl.spring.Spring_2022_22965_2;
 
 public class SpringPatcher {
     /**
@@ -74,6 +75,34 @@ public class SpringPatcher {
         @Override
         public String getShortDescription() {
             return "Fix CVE-2022_22965 (Spring4Shell) in Spring blocking all class access";
+        }
+    }
+
+    /**
+     * Patch set that represent the initial patch approach for Spring4Shell, {@link Spring_2022_22965_1}.
+     */
+    public static class SpringPatchSetV2 extends PatchSetPatcher {
+        private final List<ClassTransformerHotPatch> patches = Collections.singletonList(
+                (ClassTransformerHotPatch) new Spring_2022_22965_2());
+
+        @Override
+        public List<ClassTransformerHotPatch> getPatches() {
+            return patches;
+        }
+
+        @Override
+        public String getName() {
+            return "spring";
+        }
+
+        @Override
+        public int getVersion() {
+            return 2;
+        }
+
+        @Override
+        public String getShortDescription() {
+            return "Fix CVE-2022_22965 (Spring4Shell) in Spring blocking all class access except class.name";
         }
     }
 }

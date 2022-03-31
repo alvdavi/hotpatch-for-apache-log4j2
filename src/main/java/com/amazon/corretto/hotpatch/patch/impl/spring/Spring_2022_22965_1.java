@@ -48,7 +48,7 @@ public class Spring_2022_22965_1 implements ClassTransformerHotPatch {
         return NAME;
     }
     public String getDescription() {
-        return "Fixes CVE-2022-22965by mirroring the patch released by Spring on 5.3.18";
+        return "Fix CVE-2022_22965 (Spring4Shell) in Spring blocking all class access, which may be risky";
     }
 
     @Override
@@ -101,7 +101,7 @@ public class Spring_2022_22965_1 implements ClassTransformerHotPatch {
             logger.log("Entering CachedIntrospectionResults::<init>");
             mv.visitCode();
             mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-            mv.visitLdcInsn("-> Calling CachedIntrospectionResults::<init>");
+            mv.visitLdcInsn("-> Calling CachedIntrospectionResults::<init> v1");
             mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
         }
 
